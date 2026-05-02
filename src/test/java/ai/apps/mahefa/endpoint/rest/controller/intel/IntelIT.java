@@ -28,9 +28,8 @@ class IntelIT extends FacadeIT {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("rawLogs", "some logs"))))
         .andExpect(
-            status()
-                .isForbidden()); // Spring Security default for unauthorized if not configured
-                                 // otherwise
+            status().isForbidden()); // Spring Security default for unauthorized if not configured
+    // otherwise
   }
 
   @Test
