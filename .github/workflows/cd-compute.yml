@@ -46,6 +46,18 @@ jobs:
               (github.ref == 'refs/heads/prod') && secrets.PROD_SPRING_DATASOURCE_PASSWORD ||
               (github.ref == 'refs/heads/preprod') && secrets.PREPROD_SPRING_DATASOURCE_PASSWORD
               }}
+      GEMINI_API_KEY: ${{
+              (github.event_name == 'pull_request' && github.base_ref == 'prod') && secrets.PROD_GEMINI_API_KEY ||
+              (github.event_name == 'pull_request' && github.base_ref == 'preprod') && secrets.PREPROD_GEMINI_API_KEY ||
+              (github.ref == 'refs/heads/prod') && secrets.PROD_GEMINI_API_KEY ||
+              (github.ref == 'refs/heads/preprod') && secrets.PREPROD_GEMINI_API_KEY
+              }}
+      JWT_SECRET: ${{
+              (github.event_name == 'pull_request' && github.base_ref == 'prod') && secrets.PROD_JWT_SECRET ||
+              (github.event_name == 'pull_request' && github.base_ref == 'preprod') && secrets.PREPROD_JWT_SECRET ||
+              (github.ref == 'refs/heads/prod') && secrets.PROD_JWT_SECRET ||
+              (github.ref == 'refs/heads/preprod') && secrets.PREPROD_JWT_SECRET
+              }}
 
     steps:
       - uses: actions/checkout@v4.1.6

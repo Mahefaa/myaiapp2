@@ -38,6 +38,18 @@ jobs:
               (github.ref == 'refs/heads/prod') && secrets.PROD_SPRING_DATASOURCE_PASSWORD ||
               (github.ref == 'refs/heads/preprod') && secrets.PREPROD_SPRING_DATASOURCE_PASSWORD
               }}
+      GEMINI_API_KEY: ${{
+              (github.event_name == 'pull_request' && github.base_ref == 'prod') && secrets.PROD_GEMINI_API_KEY ||
+              (github.event_name == 'pull_request' && github.base_ref == 'preprod') && secrets.PREPROD_GEMINI_API_KEY ||
+              (github.ref == 'refs/heads/prod') && secrets.PROD_GEMINI_API_KEY ||
+              (github.ref == 'refs/heads/preprod') && secrets.PREPROD_GEMINI_API_KEY
+              }}
+      JWT_SECRET: ${{
+              (github.event_name == 'pull_request' && github.base_ref == 'prod') && secrets.PROD_JWT_SECRET ||
+              (github.event_name == 'pull_request' && github.base_ref == 'preprod') && secrets.PREPROD_JWT_SECRET ||
+              (github.ref == 'refs/heads/prod') && secrets.PROD_JWT_SECRET ||
+              (github.ref == 'refs/heads/preprod') && secrets.PREPROD_JWT_SECRET
+              }}
 
 
     steps:
@@ -53,7 +65,9 @@ jobs:
           ./gradlew test \
             -Dspring.datasource.url="$SPRING_DATASOURCE_URL" \
             -Dspring.datasource.username="$SPRING_DATASOURCE_USERNAME" \
-            -Dspring.datasource.password="$SPRING_DATASOURCE_PASSWORD"
+            -Dspring.datasource.password="$SPRING_DATASOURCE_PASSWORD" \
+            -Dgemini.api.key="$GEMINI_API_KEY" \
+            -Djwt.secret="$JWT_SECRET"
 
       
 
