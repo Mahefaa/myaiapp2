@@ -30,14 +30,6 @@ java {
     targetCompatibility = '21'
 }
 
-sourceSets {
-    main {
-        java {
-            srcDirs += 'build/gen/src/main/java'
-        }
-    }
-}
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -197,8 +189,6 @@ dependencies {
 
     implementation 'org.reflections:reflections:0.10.2'
 
-    implementation 'javax.annotation:javax.annotation-api:1.3.2'
-
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
     testCompileOnly 'org.projectlombok:lombok:1.18.30'
@@ -219,13 +209,5 @@ runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
 implementation 'com.bucket4j:bucket4j-core:8.7.0'
 implementation 'javax.annotation:javax.annotation-api:1.3.2'
 
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
-
-    // Security & AI dependencies
-    implementation 'org.springframework.boot:spring-boot-starter-security'
-    implementation 'org.springframework.boot:spring-boot-starter-webflux'
-    implementation 'io.jsonwebtoken:jjwt-api:0.12.3'
-    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.3'
-    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.3'
-    implementation 'com.bucket4j:bucket4j-core:8.7.0'
+implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0'
 }
