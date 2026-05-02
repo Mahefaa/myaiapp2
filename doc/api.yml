@@ -1,0 +1,134 @@
+openapi: "3.0.2"
+info:
+  title: my ai app
+  version: "latest"
+servers:
+  - url: https://someapp.com
+
+paths:
+  /ping:
+    get:
+      tags:
+        - Health
+      operationId: ping
+      responses:
+        "200":
+          description: pong
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: pong
+        "429":
+          $ref: "./api.yml#/components/responses/429"
+        "500":
+          $ref: "./api.yml#/components/responses/500"
+
+components:
+  responses:
+    "400":
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/BadRequestException"
+    "401":
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UnauthorizedException"
+    # TODO: add to all endpoints
+    "402":
+      description: payment required
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/PaymentRequiredException"
+    "403":
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/NotAuthorizedException"
+    "404":
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ResourceNotFoundException"
+    "429":
+      description: Too many requests to the API
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/TooManyRequestsException"
+    "500":
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/InternalServerException"
+    "503":
+      description: Service Unavailable
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ServiceUnavailableException"
+
+  schemas:
+    ExceptionModel:
+      type: object
+      properties:
+        type:
+          type: string
+        message:
+          type: string
+    PaymentRequiredException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: PaymentRequiredException
+        message: Payment Required
+    UnauthorizedException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: UnauthorizedException
+        message: Unauthorized
+    BadRequestException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: BadRequestException
+        message: Bad request
+    NotAuthorizedException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: NotAuthorizedException
+        message: Not authorized
+    ResourceNotFoundException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: ResourceNotFoundException
+        message: Resource of type <T> identified by <I> not found
+    TooManyRequestsException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: TooManyRequestsException
+        message: Too many requests
+    InternalServerException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: InternalServerException
+        message: Unexpected error
+    ServiceUnavailableException:
+      allOf:
+        - $ref: "#/components/schemas/ExceptionModel"
+      example:
+        type: ServiceUnavailableException
+        message: Service unavailable
