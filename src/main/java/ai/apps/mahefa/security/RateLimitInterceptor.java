@@ -28,7 +28,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
   @Override
   public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
       throws Exception {
-    
+
     // Only rate limit the intel endpoint for this showcase
     if (!request.getRequestURI().startsWith("/intel")) {
       return true;

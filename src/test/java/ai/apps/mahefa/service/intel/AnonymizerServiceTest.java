@@ -13,7 +13,7 @@ class AnonymizerServiceTest {
   void anonymize_redacts_emails() {
     String input = "User at john.doe@example.com logged in from 192.168.1.1";
     String result = anonymizerService.anonymize(input);
-    
+
     assertTrue(result.contains("[REDACTED_EMAIL]"));
     assertTrue(!result.contains("john.doe@example.com"));
     assertTrue(result.contains("192.168.1.1")); // IPs (potential IOCs) should be preserved
@@ -23,7 +23,7 @@ class AnonymizerServiceTest {
   void anonymize_handles_multiple_emails() {
     String input = "From: alice@test.com To: bob@work.org";
     String result = anonymizerService.anonymize(input);
-    
+
     assertEquals("From: [REDACTED_EMAIL] To: [REDACTED_EMAIL]", result);
   }
 

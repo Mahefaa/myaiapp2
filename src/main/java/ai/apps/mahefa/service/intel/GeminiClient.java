@@ -37,18 +37,18 @@ public class GeminiClient {
 
     String systemPrompt =
         """
-        You are a cybersecurity expert. Analyze the following security logs and extract Indicators of Compromise (IOCs).
-        Specifically, identify:
-        1. Suspicious IP addresses.
-        2. Suspicious domains.
-        Return ONLY a JSON object with the following structure:
-        {
-          "ips": ["list of strings"],
-          "domains": ["list of strings"],
-          "summary": "a short summary of the threat"
-        }
-        Do not include any other text, markdown formatting, or explanations.
-        """;
+You are a cybersecurity expert. Analyze the following security logs and extract Indicators of Compromise (IOCs).
+Specifically, identify:
+1. Suspicious IP addresses.
+2. Suspicious domains.
+Return ONLY a JSON object with the following structure:
+{
+  "ips": ["list of strings"],
+  "domains": ["list of strings"],
+  "summary": "a short summary of the threat"
+}
+Do not include any other text, markdown formatting, or explanations.
+""";
 
     Map<String, Object> requestBody =
         Map.of(
@@ -57,15 +57,19 @@ public class GeminiClient {
                 Map.of(
                     "parts",
                     List.of(
-                        Map.of("text", systemPrompt + "\n\nLogs to analyze:\n" + anonymizedLogs)))));
+                        Map.of(
+                            "text", systemPrompt + "\n\nLogs to analyze:\n" + anonymizedLogs)))));
 
     try {
       String responseJson =
           webClient
               .post()
-              .uri(uriBuilder -> uriBuilder.path("/v1beta/models/gemini-1.5-flash:generateContent")
-                  .queryParam("key", apiKey)
-                  .build())
+              .uri(
+                  uriBuilder ->
+                      uriBuilder
+                          .path("/v1beta/models/gemini-1.5-flash:generateContent")
+                          .queryParam("key", apiKey)
+                          .build())
               .contentType(MediaType.APPLICATION_JSON)
               .bodyValue(requestBody)
               .retrieve()
@@ -75,7 +79,10 @@ public class GeminiClient {
       return parseGeminiResponse(responseJson);
     } catch (Exception e) {
       log.error("Error calling Gemini API", e);
-      return new ThreatIntel().ips(List.of()).domains(List.of()).summary("Error analyzing logs: " + e.getMessage());
+      return new ThreatIntel()
+          .ips(List.of())
+          .domains(List.of())
+          .summary("Error analyzing logs: " + e.getMessage());
     }
   }
 
@@ -89,19 +96,22 @@ public class GeminiClient {
       String cleanedJson = textResponse.replaceAll("```json", "").replaceAll("```", "").trim();
 
       JsonNode intelNode = objectMapper.readTree(cleanedJson);
-      
+
       List<String> ips = new ArrayList<>();
       intelNode.path("ips").forEach(n -> ips.add(n.asText()));
-      
+
       List<String> domains = new ArrayList<>();
       intelNode.path("domains").forEach(n -> domains.add(n.asText()));
-      
+
       String summary = intelNode.path("summary").asText();
 
       return new ThreatIntel().ips(ips).domains(domains).summary(summary);
     } catch (Exception e) {
       log.error("Error parsing Gemini response: " + responseJson, e);
-      return new ThreatIntel().ips(List.of()).domains(List.of()).summary("Failed to parse AI response.");
+      return new ThreatIntel()
+          .ips(List.of())
+          .domains(List.of())
+          .summary("Failed to parse AI response.");
     }
   }
 }

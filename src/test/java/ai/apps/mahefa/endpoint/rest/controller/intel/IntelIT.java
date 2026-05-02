@@ -27,13 +27,16 @@ class IntelIT extends FacadeIT {
             post("/intel/extract")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(Map.of("rawLogs", "some logs"))))
-        .andExpect(status().isForbidden()); // Spring Security default for unauthorized if not configured otherwise
+        .andExpect(
+            status()
+                .isForbidden()); // Spring Security default for unauthorized if not configured
+                                 // otherwise
   }
 
   @Test
   void extract_intel_with_auth_succeeds_layer_wise() throws Exception {
     String token = jwtService.generateToken("user_for_ok_test");
-    
+
     // If Gemini key is missing, it returns a 200 with an empty list as per our code.
     mockMvc
         .perform(
@@ -47,7 +50,7 @@ class IntelIT extends FacadeIT {
   @Test
   void rate_limiting_works() throws Exception {
     String token = jwtService.generateToken("user_for_rate_limit_test");
-    
+
     // The limit is 5 per minute
     for (int i = 0; i < 5; i++) {
       mockMvc
@@ -58,7 +61,7 @@ class IntelIT extends FacadeIT {
                   .content(objectMapper.writeValueAsString(Map.of("rawLogs", "some logs"))))
           .andExpect(status().isOk());
     }
-    
+
     // 6th request should fail
     mockMvc
         .perform(

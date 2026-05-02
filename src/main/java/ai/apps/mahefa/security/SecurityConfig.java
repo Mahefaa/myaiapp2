@@ -22,7 +22,7 @@ public class SecurityConfig {
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/ping", "/health/**", "/error")
+                auth.requestMatchers("/ping", "/health/**", "/error", "/auth/token")
                     .permitAll()
                     .anyRequest()
                     .authenticated())
