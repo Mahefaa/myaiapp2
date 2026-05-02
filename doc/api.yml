@@ -24,6 +24,32 @@ paths:
         "500":
           $ref: "./api.yml#/components/responses/500"
 
+  /intel/extract:
+    post:
+      tags:
+        - Intel
+      operationId: extractIntel
+      summary: Extract Indicators of Compromise from raw logs.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ExtractIntelRequest"
+      responses:
+        "200":
+          description: Extracted Threat Intelligence
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ThreatIntel"
+        "401":
+          $ref: "#/components/responses/401"
+        "429":
+          $ref: "#/components/responses/429"
+        "500":
+          $ref: "#/components/responses/500"
+
 components:
   responses:
     "400":
@@ -132,3 +158,25 @@ components:
       example:
         type: ServiceUnavailableException
         message: Service unavailable
+    ExtractIntelRequest:
+      type: object
+      properties:
+        rawLogs:
+          type: string
+          description: Raw unstructured security logs to analyze.
+    ThreatIntel:
+      type: object
+      properties:
+        ips:
+          type: array
+          items:
+            type: string
+          description: List of suspicious IP addresses found.
+        domains:
+          type: array
+          items:
+            type: string
+          description: List of suspicious domains found.
+        summary:
+          type: string
+          description: A brief AI-generated summary of the threat.
