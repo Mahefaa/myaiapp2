@@ -8,5 +8,7 @@ public class BucketConf {
 
   void configureProperties(DynamicPropertyRegistry registry) {
     registry.add("aws.s3.bucket", () -> "dummy-bucket");
+
+    System.setProperty("aws.s3.bucket", "dummy-bucket");
   }
 }

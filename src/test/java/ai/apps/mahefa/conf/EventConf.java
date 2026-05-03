@@ -10,5 +10,9 @@ public class EventConf {
     registry.add("aws.region", () -> "dummy-region");
     registry.add("aws.sqs.queue.url", () -> "dummy-queue-url");
     registry.add("aws.eventBridge.bus", () -> "dummy-bus-url");
+
+    System.setProperty("aws.region", "dummy-region");
+    System.setProperty("aws.sqs.queue.url", "dummy-queue-url");
+    System.setProperty("aws.eventBridge.bus", "dummy-bus-url");
   }
 }

@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.servlet.util.matcher.MvcRequestMatcher;
+import org.springframework.web.servlet.handler.HandlerMappingIntrospector;
 
 @Configuration
 @EnableWebSecurity
@@ -18,11 +20,18 @@ public class SecurityConfig {
   private final JwtAuthenticationFilter jwtAuthFilter;
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http, HandlerMappingIntrospector introspector) throws Exception {
+    MvcRequestMatcher.Builder mvc = new MvcRequestMatcher.Builder(introspector);
+
     http.csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(
             auth ->
-                auth.requestMatchers("/ping", "/health/**", "/error", "/auth/token")
+                auth.requestMatchers(
+                        mvc.pattern("/ping"),
+                        mvc.pattern("/health/**"),
+                        mvc.pattern("/error"),
+                        mvc.pattern("/auth/token"))
                     .permitAll()
                     .anyRequest()
                     .authenticated())

@@ -8,5 +8,7 @@ public class EmailConf {
 
   void configureProperties(DynamicPropertyRegistry registry) {
     registry.add("aws.ses.source", () -> "dummy-ses-source");
+
+    System.setProperty("aws.ses.source", "dummy-ses-source");
   }
 }
